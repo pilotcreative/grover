@@ -376,6 +376,12 @@ describe Grover do
 
       it { expect(pdf_text_content).to eq "#{date} Some evaluated content http://www.example.net/foo/bar 1/1" }
     end
+
+    context 'with UTF-8 characters' do
+      let(:url_or_html) { '<html><body>“Company Materials”</body></html>' }
+
+      it { expect(pdf_text_content).to eq "“Quoted Text”" }
+    end
   end
 
   describe '#screenshot' do

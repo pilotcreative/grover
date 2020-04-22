@@ -88,7 +88,8 @@ class Grover
             if (url_or_html.match(/^http/i)) {
               // Request is for a URL, so request it
               request_options.waitUntil = waitUntil || 'networkidle2';
-              await page.goto(url_or_html, request_options);
+              const response = await page.goto(url_or_html, request_options);
+              await page.setContent((await response.buffer()).toString('utf8'));
             } else {
               // Request is some HTML content. Use request interception to assign the body
               request_options.waitUntil = waitUntil || 'networkidle0';
@@ -100,7 +101,8 @@ class Grover
                 page.on('request', request => request.continue());
               });
               const displayUrl = options.displayUrl; delete options.displayUrl;
-              await page.goto(displayUrl || 'http://example.com', request_options);
+              const response = await page.goto(displayUrl || 'http://example.com', request_options);
+              await page.setContent((await response.buffer()).toString('utf8'));
             }
 
             // If specified, emulate the media type
